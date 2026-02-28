@@ -1,4 +1,4 @@
---
+-- --
 -- PIXELQUEST: DECLARATIVE DATABASE SCHEMA
 -- This file represents the full desired state of the database.
 
@@ -20,34 +20,37 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 -- GAMES: The core session table
 CREATE TABLE "public"."games" (
-"id" "uuid" DEFAULT "extensions"."uuid_generate_v4"() NOT NULL,
-"admin_id" "uuid" NOT NULL,
-"title" "text" NOT NULL,
-"join_code" "text" NOT NULL,
-"status" "text" DEFAULT 'lobby'::"text" NOT NULL,
-"created_at" TIMESTAMP WITH TIME ZONE DEFAULT "now"() NOT NULL,
-CONSTRAINT "games_status_check" CHECK (("status" = ANY (ARRAY['lobby'::"text", 'active'::"text", 'finished'::"text"])))
+    "id" "uuid" DEFAULT "extensions"."uuid_generate_v4"() NOT NULL,
+    "admin_id" "uuid" NOT NULL,
+    "title" "text" NOT NULL,
+    "join_code" "text" NOT NULL,
+    "status" "text" DEFAULT 'lobby'::"text" NOT NULL,
+    "duration_seconds" INTEGER DEFAULT 600 NOT NULL, -- Admin set timer (default 10 mins)
+    "started_at" TIMESTAMP WITH TIME ZONE,            -- Set when admin starts the game
+    "created_at" TIMESTAMP WITH TIME ZONE DEFAULT "now"() NOT NULL,
+    CONSTRAINT "games_status_check" CHECK (("status" = ANY (ARRAY['lobby'::"text", 'active'::"text", 'finished'::"text"])))
 );
 
 -- RIDDLES: The level data
 CREATE TABLE "public"."riddles" (
-"id" "uuid" DEFAULT "extensions"."uuid_generate_v4"() NOT NULL,
-"game_id" "uuid" NOT NULL,
-"question" "text" NOT NULL,
-"hint" "text",
-"answer" "text" NOT NULL,
-"order_index" INTEGER NOT NULL,
-"created_at" TIMESTAMP WITH TIME ZONE DEFAULT "now"() NOT NULL
+    "id" "uuid" DEFAULT "extensions"."uuid_generate_v4"() NOT NULL,
+    "game_id" "uuid" NOT NULL,
+    "question" "text" NOT NULL,
+    "hint" "text",
+    "answer" "text" NOT NULL,
+    "order_index" INTEGER NOT NULL,
+    "created_at" TIMESTAMP WITH TIME ZONE DEFAULT "now"() NOT NULL
 );
 
 -- PLAYERS: Real-time progress tracking
 CREATE TABLE "public"."players" (
-"id" "uuid" DEFAULT "extensions"."uuid_generate_v4"() NOT NULL,
-"game_id" "uuid" NOT NULL,
-"nickname" "text" NOT NULL,
-"avatar" "text",
-"current_level" INTEGER DEFAULT 0 NOT NULL,
-"last_updated" TIMESTAMP WITH TIME ZONE DEFAULT "now"() NOT NULL
+    "id" "uuid" DEFAULT "extensions"."uuid_generate_v4"() NOT NULL,
+    "game_id" "uuid" NOT NULL,
+    "nickname" "text" NOT NULL,
+    "avatar" "text",
+    "current_level" INTEGER DEFAULT 0 NOT NULL,
+    "finished_at" TIMESTAMP WITH TIME ZONE,          -- Used to calculate total time for ranking
+    "last_updated" TIMESTAMP WITH TIME ZONE DEFAULT "now"() NOT NULL
 );
 
 -- 3. PRIMARY KEYS & CONSTRAINTS
