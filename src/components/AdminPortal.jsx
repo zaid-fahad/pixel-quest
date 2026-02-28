@@ -1,7 +1,7 @@
 // --- 5. ADMIN PORTAL COMPONENT (src/components/AdminPortal.jsx) ---
 import CreateQuest from '.././components/CreateQuest';
 import { THEME } from ".././constants/theme"
-import { ShieldCheck, UserPlus, LogIn, Plus } from 'lucide-react';
+import { ShieldCheck, UserPlus, LogIn, LogOut, Plus, Radio } from 'lucide-react';
 import supabase from '.././lib/supabase';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import formatTime from '.././lib/timerHelper';
 import RankingTable from '.././components/Rankboard';
 import GlobalTimer from './GlobalTimer';
+import IUBPCLogo from './IUBPCLogo';
 // import { useRef } from 'react';
 // import { useCallback } from 'react';
 
@@ -57,7 +58,8 @@ export default function AdminPortal({ user, game, setGame, players }) {
   if (!user) {
     return (
       <div className="max-w-md mx-auto py-20 text-center">
-        <h1 className={THEME.title}>MASTER PORTAL</h1>
+        <IUBPCLogo size="lg" />
+        <h1 className={THEME.title}>IUBPC</h1>
         <div className={THEME.panel}>
           <div className="space-y-4">
             <input className={THEME.input} type="email" placeholder="Email" onChange={e => setEmail(e.target.value)} />
@@ -82,16 +84,47 @@ export default function AdminPortal({ user, game, setGame, players }) {
 
   return (
     <div className="space-y-8 animate-in slide-in-from-bottom-4">
-      <div className="flex flex-wrap justify-between items-end border-b-4 border-slate-900 pb-6 gap-4">
-        <div>
-          <h1 className={THEME.title}>MASTER HUB</h1>
-          <p className="text-zinc-500 text-xs font-bold flex items-center gap-2 uppercase tracking-widest"><ShieldCheck size={14} className="text-emerald-500" /> Authorized: {user.email}</p>
+
+<div className="flex flex-col md:flex-row md:items-center justify-between border-b border-zinc-800 pb-8 mb-8 gap-6">
+  {/* Branding & Status Section */}
+  <div className="flex items-center gap-5">
+    <IUBPCLogo size="md" className="mb-0" /> 
+    <div className="h-10 w-[1px] bg-zinc-800 hidden md:block" /> {/* Vertical Divider */}
+    <div>
+      <h1 className={`${THEME.title} !mb-0 leading-none`}>
+        Treasure<span className="text-white">Hunt</span>
+      </h1>
+      <div className="flex items-center gap-3 mt-2">
+        <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+          <Radio size={10} className="text-emerald-500 animate-pulse" />
+          <span className="text-[9px] font-mono font-bold text-emerald-500 uppercase tracking-tighter">System_Online</span>
         </div>
-        <div className="flex gap-4">
-          <button onClick={() => setIsCreating(true)} className={THEME.btnSecondary}><Plus size={18} /> NEW QUEST</button>
-          <button onClick={() => supabase.auth.signOut()} className="text-rose-500 font-bold text-xs uppercase hover:underline">Exit</button>
-        </div>
+        <span className="text-zinc-600 text-[10px] font-mono uppercase tracking-widest hidden sm:block">
+          Admin: {user?.email?.split('@')[0] || 'root'}
+        </span>
       </div>
+    </div>
+  </div>
+
+  {/* Action Section */}
+  <div className="flex items-center gap-3">
+    <button 
+      onClick={() => setIsCreating(true)} 
+      className={`${THEME.btnPrimary} !py-2.5 !px-5 text-sm shadow-emerald-500/10`}
+    >
+      <Plus size={18} /> 
+      <span className="hidden sm:inline">NEW_QUEST</span>
+    </button>
+    
+    <button 
+      onClick={() => supabase.auth.signOut()} 
+      className="p-3 text-zinc-500 hover:text-rose-500 hover:bg-rose-500/5 rounded-xl transition-all border border-transparent hover:border-rose-500/20 group"
+      title="Exit System"
+    >
+      <LogOut size={20} className="group-hover:translate-x-0.5 transition-transform" />
+    </button>
+  </div>
+</div>
 
       {!game ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
