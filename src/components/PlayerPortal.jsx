@@ -75,7 +75,7 @@ export default function PlayerPortal({ game, setGame, players }) {
   };
 
   // 1. JOIN SCREEN
-  if (!game) {
+ if (!game) {
     return (
       <div className="max-w-md mx-auto py-16 text-center animate-in fade-in zoom-in">
         <IUBPCLogo size="lg" />
@@ -99,7 +99,7 @@ export default function PlayerPortal({ game, setGame, players }) {
     );
   }
 
-  // 2. LOBBY SCREEN
+  // 2. LOBBY SCREEN (Logic remains the same)
   if (game.status === 'lobby') {
     return (
       <div className="max-w-md mx-auto text-center py-20 space-y-8 animate-in fade-in">
@@ -115,25 +115,60 @@ export default function PlayerPortal({ game, setGame, players }) {
 
   const isFinished = riddles.length > 0 && myPlayer && myPlayer.current_level >= riddles.length;
 
-  // 3. FINISHED SCREEN
-  if (game.status === 'finished' || (isFinished && game.status === 'active')) {
+  // 3. QUEST ENDED (Admin finished the game)
+  if (game.status === 'finished') {
     return (
       <div className="max-w-md mx-auto py-16 text-center space-y-8 animate-in zoom-in">
         <IUBPCLogo size="sm" className="opacity-50" />
         <Trophy size={80} className="mx-auto text-amber-500 drop-shadow-[0_0_20px_rgba(245,158,11,0.4)]" />
-        <h2 className={THEME.title}>TASK_COMPLETE</h2>
+        <h2 className={THEME.title}>FINAL_RESULTS</h2>
         <div className={THEME.panel}>
           <RankingTable players={players} maxLevels={riddles.length} gameStartedAt={game.started_at} gameDuration={game.duration_seconds} compact />
+        </div>
+        <button onClick={() => window.location.reload()} className={THEME.btnSecondary + " w-full mt-4"}>RETURN_TO_TERMINAL</button>
+      </div>
+    );
+  }
+
+  // 4. PLAYER FINISHED EARLY (Game still active)
+  if (isFinished && game.status === 'active') {
+    return (
+      <div className="max-w-md mx-auto py-24 text-center space-y-8 animate-in slide-in-from-bottom-10">
+        <IUBPCLogo size="md" className="animate-bounce" />
+        <div className="space-y-2">
+          <h2 className={THEME.title}>MISSION<br />ACCOMPLISHED</h2>
+          <p className="text-emerald-500 font-mono text-xs tracking-widest uppercase italic font-bold">Encrypted Data Sent to Admin</p>
+        </div>
+        
+        <div className={THEME.panel}>
+          <div className="text-6xl mb-4">🏆</div>
+          <p className="text-zinc-400 font-mono text-sm leading-relaxed">
+            Excellent work, <span className="text-white font-bold">{myPlayer?.nickname}</span>. 
+            The leaderboard is currently <span className="text-indigo-400 underline decoration-indigo-500/30">locked</span>. 
+            It will be decrypted once the Admin concludes the session.
+          </p>
+          <div className="mt-6 pt-4 border-t border-zinc-800 flex items-center justify-center gap-4">
+             <div className="text-left">
+                <p className={THEME.label}>// CONNECTION</p>
+                <p className="text-emerald-500 font-mono text-xs">STABLE</p>
+             </div>
+             <div className="h-8 w-px bg-zinc-800" />
+             <div className="text-left">
+                <p className={THEME.label}>// STATUS</p>
+                <p className="text-white font-mono text-xs uppercase italic">STANDBY</p>
+             </div>
+          </div>
         </div>
       </div>
     );
   }
 
-  // 4. ACTIVE GAME SCREEN
+  // 5. ACTIVE GAME SCREEN
   return (
     <div className="max-w-2xl mx-auto py-8 space-y-6 px-4">
+      {/* Header and Riddle Logic remain exactly as you have them */}
       <div className="flex justify-between items-center">
-        <IUBPCLogo size="sm" />
+        <IUBPCLogo size="md" />
         <GlobalTimer startedAt={game.started_at} durationSeconds={game.duration_seconds} />
       </div>
 
@@ -156,7 +191,7 @@ export default function PlayerPortal({ game, setGame, players }) {
         </AnimatePresence>
         
         <h3 className={THEME.label}>// Current_Challenge.exe</h3>
-        <p className="text-2xl font-bold text-white text-center">
+        <p className="text-2xl font-bold text-white text-center leading-tight">
             {riddles[myPlayer?.current_level]?.question}
         </p>
         
