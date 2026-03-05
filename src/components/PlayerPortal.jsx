@@ -117,17 +117,50 @@ export default function PlayerPortal({ game, setGame, players }) {
 
   // 3. QUEST ENDED (Admin finished the game)
   if (game.status === 'finished') {
+    // return (
+    //   <div className="max-w-md mx-auto py-16 text-center space-y-8 animate-in zoom-in">
+    //     <IUBPCLogo size="sm" className="opacity-50" />
+    //     <Trophy size={80} className="mx-auto text-amber-500 drop-shadow-[0_0_20px_rgba(245,158,11,0.4)]" />
+    //     <h2 className={THEME.title}>FINAL_RESULTS</h2>
+    //     <div className={THEME.panel}>
+    //       <RankingTable players={players} maxLevels={riddles.length} gameStartedAt={game.started_at} gameDuration={game.duration_seconds} compact />
+    //     </div>
+    //     <button onClick={() => window.location.reload()} className={THEME.btnSecondary + " w-full mt-4"}>RETURN_TO_TERMINAL</button>
+    //   </div>
+    // );
+
     return (
-      <div className="max-w-md mx-auto py-16 text-center space-y-8 animate-in zoom-in">
-        <IUBPCLogo size="sm" className="opacity-50" />
-        <Trophy size={80} className="mx-auto text-amber-500 drop-shadow-[0_0_20px_rgba(245,158,11,0.4)]" />
-        <h2 className={THEME.title}>FINAL_RESULTS</h2>
-        <div className={THEME.panel}>
-          <RankingTable players={players} maxLevels={riddles.length} gameStartedAt={game.started_at} gameDuration={game.duration_seconds} compact />
+      <div className="max-w-md mx-auto py-24 text-center space-y-8 animate-in slide-in-from-bottom-10">
+        <IUBPCLogo size="md" className="animate-bounce" />
+        <div className="space-y-2">
+          <h2 className={THEME.title}>MISSION<br />ACCOMPLISHED</h2>
+          <p className="text-red-500 font-mono text-xs tracking-widest uppercase italic font-bold">Return to Foodcourt</p>
         </div>
-        <button onClick={() => window.location.reload()} className={THEME.btnSecondary + " w-full mt-4"}>RETURN_TO_TERMINAL</button>
+        
+        <div className={THEME.panel}>
+          <div className="text-6xl mb-4">🏆</div>
+          <p className="text-zinc-400 font-mono text-sm leading-relaxed">
+            Excellent work, <span className="text-white font-bold">{myPlayer?.nickname}</span>. 
+            The leaderboard is currently <span className="text-indigo-400 underline decoration-indigo-500/30">locked</span>. 
+            It will be decrypted once the Admin concludes the session.
+          </p>
+          <div className="mt-6 pt-4 border-t border-zinc-800 flex items-center justify-center gap-4">
+             <div className="text-left">
+                <p className={THEME.label}>// CONNECTION</p>
+                <p className="text-emerald-500 font-mono text-xs">STABLE</p>
+             </div>
+             <div className="h-8 w-px bg-zinc-800" />
+             <div className="text-left">
+                <p className={THEME.label}>// STATUS</p>
+                <p className="text-white font-mono text-xs uppercase italic">STANDBY</p>
+             </div>
+          </div>
+        </div>
       </div>
     );
+
+
+    
   }
 
   // 4. PLAYER FINISHED EARLY (Game still active)
@@ -137,7 +170,7 @@ export default function PlayerPortal({ game, setGame, players }) {
         <IUBPCLogo size="md" className="animate-bounce" />
         <div className="space-y-2">
           <h2 className={THEME.title}>MISSION<br />ACCOMPLISHED</h2>
-          <p className="text-emerald-500 font-mono text-xs tracking-widest uppercase italic font-bold">Encrypted Data Sent to Admin</p>
+          <p className="text-red-500 font-mono text-xs tracking-widest uppercase italic font-bold">Return to Foodcourt</p>
         </div>
         
         <div className={THEME.panel}>
